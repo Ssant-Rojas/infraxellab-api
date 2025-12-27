@@ -2,6 +2,7 @@ import { Router } from "express"
 import { z } from "zod"
 import { sendContactEmail, sendAutoReplyEmail } from "../services/mail.service"
 import { logInfo, logError } from "../lib/logger"
+import { contactLimiter } from "@/middlewares/rateLimit"
 
 const router = Router()
 
@@ -12,7 +13,7 @@ const contactSchema = z.object({
   company: z.string().optional(),
 })
 
-router.post("/contact", async (req, res) => {
+router.post("/contact", contactLimiter, async (req, res) => {
   try {
     const data = contactSchema.parse(req.body)
 
