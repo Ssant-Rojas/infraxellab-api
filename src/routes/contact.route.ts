@@ -2,7 +2,7 @@ import { Router } from "express"
 import { z } from "zod"
 import { sendContactEmail, sendAutoReplyEmail } from "../services/mail.service"
 import { logInfo, logError } from "../lib/logger"
-import { contactLimiter } from "@/middlewares/rateLimit"
+import { contactLimiter } from "../middlewares/rateLimit"
 
 const router = Router()
 
