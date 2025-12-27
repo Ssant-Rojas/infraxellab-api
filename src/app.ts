@@ -21,6 +21,16 @@ const allowedOrigins =
         "http://127.0.0.1:5173",
       ]
 
+      app.get("/health", (_, res) => {
+  res.json({
+    status: "ok",
+    service: "infraxellab-api",
+    env: process.env.NODE_ENV,
+    email: !!process.env.RESEND_API_KEY,
+    time: new Date().toISOString(),
+  })
+})
+
 app.use(
   cors({
     origin: allowedOrigins,
