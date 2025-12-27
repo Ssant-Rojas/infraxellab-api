@@ -3,6 +3,7 @@ import { z } from "zod"
 import { sendContactEmail, sendAutoReplyEmail } from "../services/mail.service"
 import { logInfo, logError } from "../lib/logger"
 import { contactLimiter } from "../middlewares/rateLimit"
+import { sendDiscordMessage } from "../lib/discord"
 
 const router = Router()
 
@@ -27,8 +28,17 @@ router.post("/contact", contactLimiter, async (req, res) => {
       ua: req.headers["user-agent"],
     })
 
-    await sendContactEmail(data)
-    await sendAutoReplyEmail(data)
+    if (process.env.RESEND_API_KEY) {
+      await sendContactEmail(data)
+      await sendAutoReplyEmail(data)
+    }
+
+    await sendDiscordMessage(
+      `📩 **Nuevo contacto**
+👤 ${data.name}
+📧 ${data.email}
+💬 ${data.message}`
+    )
 
     return res.status(200).json({
       ok: true,

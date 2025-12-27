@@ -21,7 +21,7 @@ const allowedOrigins =
         "http://127.0.0.1:5173",
       ]
 
-      app.get("/health", (_, res) => {
+app.get("/health", (_, res) => {
   res.json({
     status: "ok",
     service: "infraxellab-api",
@@ -30,6 +30,9 @@ const allowedOrigins =
     time: new Date().toISOString(),
   })
 })
+
+app.use(helmet())
+
 
 app.use(
   cors({
@@ -43,7 +46,6 @@ app.use(
 app.use(express.json())
 app.use(requestLogger) // 👁️ OBSERVABILIDAD GLOBAL
 app.set("trust proxy", 1)
-app.use(helmet())
 
 app.use("/api", contactRoute)
 
