@@ -5,10 +5,20 @@ export function adminIpAllowlist(
   res: Response,
   next: NextFunction
 ) {
-  const allowed = process.env.ADMIN_ALLOWED_IPS?.split(",").map(ip => ip.trim())
+  // ✅ BYPASS PARA PREFLIGHT
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204)
+  }
+
+  const allowed = process.env.ADMIN_ALLOWED_IPS
+    ?.split(",")
+    .map(ip => ip.trim())
 
   if (!allowed || allowed.length === 0) {
-    return res.status(500).json({ ok: false, error: "IP allowlist not configured" })
+    return res.status(500).json({
+      ok: false,
+      error: "IP allowlist not configured",
+    })
   }
 
   const forwardedFor = req.headers["x-forwarded-for"]
@@ -18,7 +28,10 @@ export function adminIpAllowlist(
       : req.ip
 
   if (!clientIp) {
-    return res.status(403).json({ ok: false, error: "Cannot determine IP" })
+    return res.status(403).json({
+      ok: false,
+      error: "Cannot determine IP",
+    })
   }
 
   if (!allowed.includes(clientIp)) {
