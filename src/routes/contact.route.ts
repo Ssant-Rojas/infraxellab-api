@@ -7,7 +7,7 @@ import { contactLimiter } from "../middlewares/rateLimit"
 import { prisma } from "../lib/prisma"
 import { logInfo, logError } from "../lib/logger"
 import { sendDiscordMessage } from "../lib/discord"
-import { turnstile } from "@/middlewares/turnstale"
+import { turnstile } from "../middlewares/turnstale"
 
 
 
