@@ -7,7 +7,6 @@ import adminRoutes from "./routes/admin.route"
 
 
 export const app = express()
-app.set("trust proxy", 1)
 
 
 const allowedOrigins =
@@ -33,16 +32,18 @@ app.get("/health", (_, res) => {
   })
 })
 
-
+app.set("trust proxy", 1)
 app.use(helmet())
 
 app.use(
   cors({
     origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "PATCH" ,"DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH" ,"DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "x-admin-key"],
   })
 )
+
+app.options("*", cors())
 
 app.use(express.json())
 app.use(requestLogger)
