@@ -1,0 +1,18 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  message   String
+  ip        String?
+  userAgent String?
+  isSpam    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

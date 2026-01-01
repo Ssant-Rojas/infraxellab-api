@@ -10,5 +10,9 @@
     "paths": {
       "@/*": ["*"]
     }
-  }
+  },
+  "exclude": [
+    "prisma.config.ts",
+    "node_modules"
+  ]
 }

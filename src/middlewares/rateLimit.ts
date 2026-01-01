@@ -6,3 +6,10 @@ export const contactLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 })
+
+export const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+})
