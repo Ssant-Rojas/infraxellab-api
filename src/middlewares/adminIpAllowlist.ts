@@ -1,28 +1,31 @@
 import { Request, Response, NextFunction } from "express"
 
-const ALLOWED_IPS = (process.env.ADMIN_ALLOWED_IPS || "")
-  .split(",")
-  .map(ip => ip.trim())
-  .filter(Boolean)
-
 export function adminIpAllowlist(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-    if (process.env.NODE_ENV !== "production") {
-        return next()
-    }
+  const allowed = process.env.ADMIN_ALLOWED_IPS?.split(",").map(ip => ip.trim())
 
+  if (!allowed || allowed.length === 0) {
+    return res.status(500).json({ ok: false, error: "IP allowlist not configured" })
+  }
 
-  const ip =
-    req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
-    req.socket.remoteAddress
+  const forwardedFor = req.headers["x-forwarded-for"]
+  const clientIp =
+    typeof forwardedFor === "string"
+      ? forwardedFor.split(",")[0].trim()
+      : req.ip
 
-  if (!ip || !ALLOWED_IPS.includes(ip)) {
+  if (!clientIp) {
+    return res.status(403).json({ ok: false, error: "Cannot determine IP" })
+  }
+
+  if (!allowed.includes(clientIp)) {
     return res.status(403).json({
       ok: false,
       error: "IP not allowed",
+      ip: clientIp,
     })
   }
 
