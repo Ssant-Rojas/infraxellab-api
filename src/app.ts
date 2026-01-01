@@ -32,11 +32,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "x-admin-key"],
 }));
 
-app.options("*", (_req, res) => {
-  res.sendStatus(204);
-});
-
-
 app.use(express.json())
 app.use(requestLogger)
 
